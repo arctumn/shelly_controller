@@ -73,7 +73,7 @@ const ShowUi = () => {
             if(power_device.tracking){
                 const updated = incoming_data_from_devices
                                 .find(device => device.device_id === power_device.device.device_id)
-
+                
                 setPowerDevice({device:updated !== undefined ? updated : power_device.device,tracking:true})
             }
             setDevices(incoming_data_from_devices)
