@@ -1,46 +1,44 @@
 .page{
-    background-color: rgb(187, 251, 246);
-    border-radius: 1em;
-    border-color: rgb(250, 161, 161);
-    border-style: inset;
+    background-color:#bbe8ff;
     overflow: hidden;
     margin: 0 auto;
-    background-color: bisque;
 }
-
+h1{
+    margin-top: 0;
+}
+h1, h2 {
+    color: #004c6d;
+}
+h2 {
+    margin-bottom: 0;
+}
 .left-side {
-    float: left;
-    background-color: rgb(30, 174, 210);
-    margin-left: 5vw;
-    margin-bottom: 1em;
-    padding: 10px;
-    margin-top: 10px;
-    
-    border-radius: 0.5em;
-    border-color: rgb(106, 225, 255);
-    width: 300px;
-    height: 100px;
-}
-
-.right-side {
-    float: right;
-    border-color: rgb(106, 225, 255);
-    margin-right: 5vw;
-    margin-top: 10px;
-    margin-bottom: 1em;
-    
+    background-color: #3b708f;
+    margin: 1em;
     padding: 10px;
     border-radius: 0.5em;
-    background-color: rgb(30, 174, 210);
-    width: 300px;
-    height: 100px;
+    width: fit-content;
+    height: fit-content;
+    float:left;  
 }
-.left-side p {
+.left-side:hover{
+    background-color: #50a9cf;
+    font-weight: bolder;
+}
+.left-side p{
     text-align: center;
-    font-size: large;
+    color:#dddddd;
+    font-weight: bold;
 }
-.right-side p {
-    text-align: center;
-    font-size: large;
+.header {
+    top: 0;
+    background-color: #3b708f;
+    margin: 0 auto;
+    height: auto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    
 }
-
+.header h2, .header h1 {
+    color: white;
+}

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { id_painel, key, id_edp } from "./Constants";
+import Border from "./border";
+import Card from "./card";
+import { device_id_list, key} from "./Constants";
 import './page.css';
 
 type device_consuption = {
@@ -11,8 +13,10 @@ type device_consuption = {
     total_returned: number
     voltage: number
 }
-type device = {
+export type device = {
     online: boolean,
+    device_ip: string,
+    device_id: string,
     device_use: device_consuption
 }
 const fetch_data = async (device_id: string, access_key: string) => {
@@ -29,6 +33,8 @@ const fetch_data = async (device_id: string, access_key: string) => {
 }
 const no_info: device = {
     online: false,
+    device_ip:"localhost",
+    device_id:"########",
     device_use: {
         is_valid: false,
         power: 0,
@@ -41,28 +47,18 @@ const no_info: device = {
 
 
 const ShowUi = () => {
-    const [devices, setDevices] = useState([no_info, no_info])
+    const [devices, setDevices] = useState([] as device[])
+    let incoming_data_from_devices = [] as device[]
 
-    let panel_data = no_info;
-    let energy_provider_data = no_info;
-
-    const get_data_panel = () => fetch_data(id_painel, key)
+    const get_data = (device_id:string) => fetch_data(device_id, key)
         .then(body => {
             const data = body.data.data
-            panel_data = {
+            incoming_data_from_devices.push({
                 online: data.online,
-                device_use: data.device_status.emeters[0]
-            }
-        })
-        .catch(console.error)
-
-    const get_data_edp = () => fetch_data(id_edp, key)
-        .then(body => {
-            const data = body.data.data
-            energy_provider_data = {
-                online: data.online,
-                device_use: data.device_status.emeters[0]
-            }
+                device_ip:data.device_status.wifi_sta.ip,
+                device_id:data.device_status.mac,
+                device_use: data.device_status.emeters ? data.device_status.emeters[0] : data.device_status.meters[0]
+            })
         })
         .catch(console.error)
 
@@ -70,41 +66,28 @@ const ShowUi = () => {
     useEffect(() => {
         const intervalCall = setInterval(() => {
             //Request data of shelly device controling the solar panel
-            get_data_panel();
-            //Await the time of the API limit
-            setInterval(() => { }, 1000)
-            //Request data of shelly device controling the energy provider
-            get_data_edp();
+            device_id_list.map(get_data)
             //Update device data on screen
-            setDevices([panel_data, energy_provider_data])
-        }, 4000);
+            incoming_data_from_devices.sort((e1,e2) => Math.abs(e1.device_use.power) > Math.abs(e2.device_use.power) ? -1 : 1)
+            setDevices(incoming_data_from_devices)
+            incoming_data_from_devices = []
+        }, 5000);
         //Clean the interval
         return () => clearInterval(intervalCall);
     }, []);
-
     return <div className="page">
-        {devices[0].online && devices[1].online ?
+        { devices.length !== 0 ?
             <div>
-                <h1>Energy usage every 5 seconds</h1>
-                <h2>Power {devices[1].device_use.power < 0 ? "exported " : "imported "} {Math.abs(devices[1].device_use.power)} W </h2>
-                <h2>Device information</h2>
-                <hr
-                    style={{
-                        borderBottomColor: 'black',
-                        margin:'5px',
-                        borderRadius:'1em',
-                        borderBottomWidth: '0.5em',
-                    }}
-                />
-                <div>
-                    {devices.map((device, index) =>
-                        <div className={index % 2 === 0 ? "left-side" : "right-side"}>
-                            <p>Device status: {device.online ? "online" : "offline"}</p>
-                            <p>Device power information: {device.device_use.power} W</p>
-                            <br />
-                        </div>
-                    )}
-                </div>
+                <nav className="header">
+                    <h1>Energy usage every 5 seconds</h1>
+                    <h2> Power {devices[1].device_use.power < 0 ? 
+                            "exported " : "imported "}
+                            {Math.abs(devices[1].device_use.power)} W 
+                    </h2>
+                </nav>
+                <Border/>
+                <h1>Device information:</h1>
+                <Card devices={devices}/>  
             </div>
             :
             <div>
