@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Border from "./border";
-import Card from "./card";
-import { device_id_list, key} from "./Constants";
+
+import { device_id_list, key } from "./Constants";
 import './page.css';
 
 type device_consuption = {
@@ -33,8 +33,8 @@ const fetch_data = async (device_id: string, access_key: string) => {
 }
 const no_info: device = {
     online: false,
-    device_ip:"localhost",
-    device_id:"########",
+    device_ip: "localhost",
+    device_id: "########",
     device_use: {
         is_valid: false,
         power: 0,
@@ -45,49 +45,68 @@ const no_info: device = {
     }
 }
 
-
 const ShowUi = () => {
     const [devices, setDevices] = useState([] as device[])
+    const [power_device, setPowerDevice] = useState({device: no_info, tracking:false} )
     let incoming_data_from_devices = [] as device[]
 
-    const get_data = (device_id:string) => fetch_data(device_id, key)
+    const get_data = (device_id: string) => fetch_data(device_id, key)
         .then(body => {
             const data = body.data.data
             incoming_data_from_devices.push({
                 online: data.online,
-                device_ip:data.device_status.wifi_sta.ip,
-                device_id:data.device_status.mac,
+                device_ip: data.device_status.wifi_sta.ip,
+                device_id: data.device_status.mac,
                 device_use: data.device_status.emeters ? data.device_status.emeters[0] : data.device_status.meters[0]
             })
         })
         .catch(console.error)
 
-    // Get data every 5 seconds about the state of the devices
+    // Get data every 1.5 seconds about the state of the devices
     useEffect(() => {
         const intervalCall = setInterval(() => {
             //Request data of shelly device controling the solar panel
             device_id_list.map(get_data)
+            //Sorts my absolute energy consuption
+            incoming_data_from_devices.sort((e1, e2) => Math.abs(e1.device_use.power) > Math.abs(e2.device_use.power) ? -1 : 1)
             //Update device data on screen
-            incoming_data_from_devices.sort((e1,e2) => Math.abs(e1.device_use.power) > Math.abs(e2.device_use.power) ? -1 : 1)
+            if(power_device.tracking){
+                const updated = incoming_data_from_devices
+                                .find(device => device.device_id === power_device.device.device_id)
+
+                setPowerDevice({device:updated !== undefined ? updated : power_device.device,tracking:true})
+            }
             setDevices(incoming_data_from_devices)
             incoming_data_from_devices = []
-        }, 5000);
+        }, 1500);
         //Clean the interval
         return () => clearInterval(intervalCall);
     }, []);
+
+
     return <div className="page">
-        { devices.length !== 0 ?
+        {devices.length !== 0 ?
             <div>
                 <nav className="header">
-                    <h1>Energy usage every 5 seconds</h1>
-                    <h2> Power {devices[1].device_use.power < 0 ? 
-                            "exported " : "imported "}
-                            {Math.abs(devices[1].device_use.power)} W 
+                    <h1>Energy usage every 1.5 seconds</h1>
+                    <h2> Power {power_device.device.device_use.power < 0 ?
+                        "exported " : "imported "}
+                        {Math.abs(power_device.device.device_use.power)} W
                     </h2>
                 </nav>
-                <Border/>
+                <Border />
                 <h1>Device information:</h1>
-                <Card devices={devices}/>  
+                {devices.map(device =>
+                    <div>
+                        <div onClick={() => setPowerDevice({device:device,tracking:true})} className="left-side">
+                            <p>Device status: {device.online ? "online" : "offline"}</p>
+                            <p>Device ip: {device.device_ip}</p>
+                            <p>Device id: {device.device_id}</p>
+                            <p>Device power : {device.device_use.power} W</p>
+                            <br />
+                        </div>
+                    </div>
+                )}
             </div>
             :
             <div>
