@@ -112,7 +112,6 @@ const ShowUi = () => {
                             <p>Device ip: {device.device_ip}</p>
                             <p>Device id: {device.device_id}</p>
                             <p>Device power : {device.device_use.power} W</p>
-                            <br />
                         </div>
                     </div>
                 )}</div>
