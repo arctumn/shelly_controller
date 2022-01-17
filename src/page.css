@@ -12,6 +12,14 @@ h1, h2 {
 h2 {
     margin-bottom: 0;
 }
+.container {
+    display: flex;
+    margin:auto;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
+}
 .left-side {
     background-color: #3b708f;
     margin: 1em;
@@ -19,7 +27,6 @@ h2 {
     border-radius: 0.5em;
     width: fit-content;
     height: fit-content;
-    float:left;  
 }
 .left-side:hover{
     background-color: #50a9cf;

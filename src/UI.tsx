@@ -96,7 +96,7 @@ const ShowUi = () => {
                 </nav>
                 <Border />
                 <h1>Device information:</h1>
-                {devices.map(device =>
+                <div className="container">{devices.map(device =>
                     <div>
                         <div onClick={() => setPowerDevice({device:device,tracking:true})} className="left-side">
                             <p>Device status: {device.online ? "online" : "offline"}</p>
@@ -106,7 +106,7 @@ const ShowUi = () => {
                             <br />
                         </div>
                     </div>
-                )}
+                )}</div>
             </div>
             :
             <div>
