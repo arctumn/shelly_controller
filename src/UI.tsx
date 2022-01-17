@@ -62,7 +62,7 @@ const ShowUi = () => {
         })
         .catch(console.error)
 
-    // Get data every 1.5 seconds about the state of the devices
+    // Get data every 3 seconds about the state of the devices
     useEffect(() => {
         const intervalCall = setInterval(() => {
             //Request data of shelly device controling the solar panel
@@ -78,7 +78,7 @@ const ShowUi = () => {
             }
             setDevices(incoming_data_from_devices)
             incoming_data_from_devices = []
-        }, 1500);
+        }, 3000);
         //Clean the interval
         return () => clearInterval(intervalCall);
     }, []);
@@ -88,7 +88,7 @@ const ShowUi = () => {
         {devices.length !== 0 ?
             <div>
                 <nav className="header">
-                    <h1>Energy usage every 1.5 seconds</h1>
+                    <h1>Energy usage every 3 seconds</h1>
                     <h2> Power {power_device.device.device_use.power < 0 ?
                         "exported " : "imported "}
                         {Math.abs(power_device.device.device_use.power)} W
