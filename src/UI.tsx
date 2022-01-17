@@ -60,7 +60,16 @@ const ShowUi = () => {
                 device_use: data.device_status.emeters ? data.device_status.emeters[0] : data.device_status.meters[0]
             })
         })
-        .catch(console.error)
+        .catch(_ => incoming_data_from_devices.push(
+                {
+                    online: no_info.online,
+                    device_ip: no_info.device_ip,
+                    device_id: device_id? device_id : no_info.device_id,
+                    device_use: no_info.device_use
+                }
+            )
+        )
+    
 
     // Get data every 3 seconds about the state of the devices
     useEffect(() => {
@@ -85,7 +94,6 @@ const ShowUi = () => {
 
 
     return <div className="page">
-        {devices.length !== 0 ?
             <div>
                 <nav className="header">
                     <h1>Energy usage every 3 seconds</h1>
@@ -96,6 +104,7 @@ const ShowUi = () => {
                 </nav>
                 <Border />
                 <h1>Device information:</h1>
+                {devices.length !== 0 ?
                 <div className="container">{devices.map(device =>
                     <div>
                         <div onClick={() => setPowerDevice({device:device,tracking:true})} className="left-side">
@@ -107,13 +116,14 @@ const ShowUi = () => {
                         </div>
                     </div>
                 )}</div>
-            </div>
+            
             :
             <div>
                 <h1>Please wait!</h1>
                 <h2>Your data is being loaded.</h2>
                 <h2>Grab a drink while you wait!</h2>
             </div>}
+            </div>
     </div>
 }
 
