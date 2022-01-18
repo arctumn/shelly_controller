@@ -47,7 +47,7 @@ const no_info: device = {
 
 const ShowUi = () => {
     const [devices, setDevices] = useState([] as device[])
-    const [power_device, setPowerDevice] = useState({device: no_info, tracking:false} )
+    
     let incoming_data_from_devices = [] as device[]
 
     const get_data = (device_id: string) => fetch_data(device_id, key)
@@ -79,12 +79,7 @@ const ShowUi = () => {
             //Sorts my absolute energy consuption
             incoming_data_from_devices.sort((e1, e2) => Math.abs(e1.device_use.power) > Math.abs(e2.device_use.power) ? -1 : 1)
             //Update device data on screen
-            if(power_device.tracking){
-                const updated = incoming_data_from_devices
-                                .find(device => device.device_id === power_device.device.device_id)
-                
-                setPowerDevice({device:updated !== undefined ? updated : power_device.device,tracking:true})
-            }
+           
             setDevices(incoming_data_from_devices)
             incoming_data_from_devices = []
         }, 3000);
@@ -97,17 +92,13 @@ const ShowUi = () => {
             <div>
                 <nav className="header">
                     <h1>Energy usage every 3 seconds</h1>
-                    <h2> Power {power_device.device.device_use.power < 0 ?
-                        "exported " : "imported "}
-                        {Math.abs(power_device.device.device_use.power)} W
-                    </h2>
                 </nav>
                 <Border />
                 <h1>Device information:</h1>
                 {devices.length !== 0 ?
                 <div className="container">{devices.map(device =>
                     <div>
-                        <div onClick={() => setPowerDevice({device:device,tracking:true})} className="left-side">
+                        <div className="left-side">
                             <p>Device status: {device.online ? "online" : "offline"}</p>
                             <p>Device ip: {device.device_ip}</p>
                             <p>Device id: {device.device_id}</p>
