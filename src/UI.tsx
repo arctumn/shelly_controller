@@ -121,6 +121,7 @@ const ShowUi = () => {
                 <h1>Please wait!</h1>
                 <h2>Your data is being loaded.</h2>
                 <h2>Grab a drink while you wait!</h2>
+                <br></br>
                 <div className="loader"></div>
             </div>}
             </div>
