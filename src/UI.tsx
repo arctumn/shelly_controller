@@ -5,7 +5,7 @@ import Border from "./border";
 import { device_id_list, key } from "./Constants";
 import './page.css';
 
-type device_consuption = {
+interface device_consuption {
     is_valid: boolean
     power: number
     reactive: number
@@ -13,7 +13,7 @@ type device_consuption = {
     total_returned: number
     voltage: number
 }
-export type device = {
+export interface device {
     online: boolean,
     device_ip: string,
     device_id: string,
@@ -79,7 +79,6 @@ const ShowUi = () => {
             //Sorts my absolute energy consuption
             incoming_data_from_devices.sort((e1, e2) => Math.abs(e1.device_use.power) > Math.abs(e2.device_use.power) ? -1 : 1)
             //Update device data on screen
-           
             setDevices(incoming_data_from_devices)
             incoming_data_from_devices = []
         }, 3000);
@@ -94,8 +93,10 @@ const ShowUi = () => {
                     <h1>Energy usage every 3 seconds</h1>
                 </nav>
                 <Border />
-                <h1>Device information:</h1>
+                
                 {devices.length !== 0 ?
+                <div>
+                <h1>Device information:</h1>
                 <div className="container">{devices.map(device =>
                     <div>
                         <div className="left-side">
@@ -106,7 +107,7 @@ const ShowUi = () => {
                         </div>
                     </div>
                 )}</div>
-            
+                </div>
             :
             <div>
                 <h1>Please wait!</h1>

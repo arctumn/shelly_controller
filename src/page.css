@@ -38,21 +38,19 @@ h2 {
     font-weight: bold;
 }
 .header {
-    top: 0;
     background-color: #004c6d;
-    margin: 0 auto;
-    height: auto;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    
+    margin: auto;
+    padding: 15px;
 }
-.header h2, .header h1 {
+.header h1 {
     color: white;
+    margin: auto;
+    font-size: 2em;
 }
 
 .loader {
-    border: 16px solid #c3d8e2; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    border: 16px solid #bbe8ff; /* Light grey */
+    border-top: 16px solid #3b708f; /* Blue */
     border-radius: 50%;
     width: 120px;
     height: 120px;
