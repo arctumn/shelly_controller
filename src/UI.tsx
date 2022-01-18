@@ -104,7 +104,7 @@ const ShowUi = () => {
                 </nav>
                 <Border />
                 <h1>Device information:</h1>
-                {devices.length !== 0 ?
+                {false ?
                 <div className="container">{devices.map(device =>
                     <div>
                         <div onClick={() => setPowerDevice({device:device,tracking:true})} className="left-side">
@@ -121,7 +121,7 @@ const ShowUi = () => {
                 <h1>Please wait!</h1>
                 <h2>Your data is being loaded.</h2>
                 <h2>Grab a drink while you wait!</h2>
-                <br></br>
+                <br></br> 
                 <div className="loader"></div>
             </div>}
             </div>
